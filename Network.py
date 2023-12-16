@@ -12,11 +12,7 @@ class Client():
         self.ip = ip
         self.port = port
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            self.soc.connect((self.ip,self.port))
-        except:
-            print("failed to connect")
-            while 1:pass
+        self.soc.connect((self.ip,self.port))
     def recive(self,convert_type = None):
         return reciveProtocol(self.soc,convert_type)
     def send(self,item):
