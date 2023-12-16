@@ -38,7 +38,7 @@ def ConnectToServer():
     global soc
     soc = None
     for i in attemptIpList:
-        pt.Print("Testing IP/PORT ("+i[0]+",",i[1],")", end=" ")
+        pt.Print("Testing IP/PORT ("+i[0]+","+str(i[1])+")")
         try:
             soc = Network.Client(i[0], i[1])
             pt.Print("Success")
