@@ -12,6 +12,7 @@ class Client():
         self.ip = ip
         self.port = port
         self.soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.soc.settimeout(3)
         self.soc.connect((self.ip,self.port))
     def recive(self,convert_type = None):
         return reciveProtocol(self.soc,convert_type)
