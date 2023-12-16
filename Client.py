@@ -1,3 +1,8 @@
+import time
+print("Waiting 30 for complete boot")
+time.sleep(30)
+print("Starting Client")
+
 import Network
 import Instructions
 import pickle
