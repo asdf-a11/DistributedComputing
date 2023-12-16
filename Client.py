@@ -3,9 +3,25 @@ import Instructions
 import pickle
 import traceback
 
-IP = Network.SelfIp()
-PORT = Network.PORT
-soc = Network.Client(IP, PORT)
+attemptIpList = [
+    ["192.168.1.63", Network.PORT],#Main Pc
+    [Network.SelfIp(), Network.PORT]#Self
+]
+def ConnectToServer():
+    global soc
+    soc = None
+    for i in attemptIpList:
+        print("Testing IP/PORT ("+i[0]+",",i[1],")", end=" ")
+        try:
+            soc = Network.Client(i[0], i[1])
+            print("Success")
+            break
+        except Exception:
+            print("Failed")
+    if soc == None:
+        raise Exception("Could not find a server")
+
+ConnectToServer()
 
 func = None
 dataBuffer = None
