@@ -1,12 +1,34 @@
-import time
-print("Waiting 30 for complete boot")
-time.sleep(30)
-print("Starting Client")
-
 import Network
 import Instructions
 import pickle
 import traceback
+import os
+import PygameTerminal as pt
+
+'''
+def Import(libName, installInstructions, asName=None):
+    globaString = "global "
+    if asName == None:
+        globalString += libName
+    else:
+        globalString += asName
+    importString = globalString + "; import " + libName
+    if asName != None:
+        importString += " as " + asName
+    try:
+        exec(importString)
+    except:
+        pt.Print("Failed import of " + libName + " Running -> " + installInstructions)
+        os.system(installInstructions)
+        try:
+            exec(importString)
+        except:
+            raise Exception("Failed to import file ")
+inst = ""
+Import("PygameTerminal", )
+'''
+
+
 
 attemptIpList = [
     ["192.168.1.63", Network.PORT],#Main Pc
@@ -16,13 +38,13 @@ def ConnectToServer():
     global soc
     soc = None
     for i in attemptIpList:
-        print("Testing IP/PORT ("+i[0]+",",i[1],")", end=" ")
+        pt.Print("Testing IP/PORT ("+i[0]+",",i[1],")", end=" ")
         try:
             soc = Network.Client(i[0], i[1])
-            print("Success")
+            pt.Print("Success")
             break
         except Exception:
-            print("Failed")
+            pt.Print("Failed")
     if soc == None:
         raise Exception("Could not find a server")
 
@@ -33,7 +55,7 @@ dataBuffer = None
 
 def Start():
     global dataBuffer
-    print("Starting")
+    pt.Print("Starting")
     argList = []
     argCount = soc.recive(int)    
     for i in range(argCount):
@@ -42,14 +64,14 @@ def Start():
         result = func(argList)
     except Exception as e:
         result = Instructions.ERROR + "| "  + traceback.format_exc()
-    print("Sending results")
+    pt.Print("Sending results")
     soc.send(Instructions.GOT_DATA)
     dataBuffer = result
 def SetFunction():
     global func
     functionName = soc.recive(str)
     functionSourceCode = soc.recive(str)
-    print(functionSourceCode)
+    pt.Print(functionSourceCode)
     namespace = {}
     exec(functionSourceCode, namespace)
     func = namespace[functionName]
