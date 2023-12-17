@@ -32,13 +32,13 @@ def UpdateTerminal():
 
     pygame.init()
     pygame.display.set_caption("Pygame Terminal")
-    window = pygame.display.set_mode()
-    MAX_SCREENX, MAX_SCREENY = window.get_size()
+    #window = pygame.display.set_mode()
+    #MAX_SCREENX, MAX_SCREENY = window.get_size()
     font = pygame.font.SysFont(pygame.font.get_fonts()[0], FONT_SIZE)#pygame.font.Font(
     clock = pygame.time.Clock()
 
-    screenx = min(MAX_SCREENX, screenx)
-    screeny = min(MAX_SCREENY, screeny)
+    #screenx = min(MAX_SCREENX, screenx)
+    #screeny = min(MAX_SCREENY, screeny)
 
     pygame.display.quit()
     window = pygame.display.set_mode((screenx, screeny))
