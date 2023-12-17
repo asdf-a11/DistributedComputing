@@ -94,7 +94,7 @@ def sendProtocol(soc,item,is_confirm=True):
         soc.send(byteList[:packetSize])
         byteList = byteList[packetSize:]
         rem -= packetSize
-    soc.send(byteList) 
+
 
 def reciveProtocol(soc,convert_type=None,is_confirm=True):
     size = int.from_bytes(soc.recv(8), "big") 
