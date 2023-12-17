@@ -104,6 +104,10 @@ def reciveProtocol(soc,convert_type=None,is_confirm=True):
         packetSize = min(rem, MAX_PER_PACKET)
         b += soc.recv(packetSize)
         rem -= packetSize
+    if convert_type == str:
+        b = b.decode("utf-8")
+    if convert_type == int:
+        b = int.from_bytes(b, "big")
     return b
 
 
