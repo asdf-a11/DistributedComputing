@@ -2,9 +2,9 @@ import socket
 import _thread as thread
 import time
 import math
-conf = False
 CONFMSG = "Conf."
 PORT = 1500
+MAX_PER_PACKET = 4095
 def SelfIp():
     return socket.gethostbyname(socket.gethostname())
 class Client():
@@ -84,64 +84,26 @@ class Server():
         self.clientList.pop(idx)
 
 def sendProtocol(soc,item,is_confirm=True):
-    if conf and is_confirm: sendProtocol(soc,CONFMSG,False)
     byteList = item
     if type(item) == str:byteList = bytes(item, 'utf-8')
-    if type(item) == int:byteList = item.to_bytes(4, byteorder='big')    
-    size = len(byteList)
-    while 1:
-        if size > 255:
-            size -= 255
-            soc.send(bytes([255]))
-        else:
-            if size != 0:
-                soc.send(bytes([size]))
-            break
-    soc.send(bytes([0]))
+    if type(item) == int:byteList = item.to_bytes(8, byteorder='big')    
+    soc.send(len(byteList).to_bytes(8, byteorder='big'))
+    rem = len(byteList)
+    while rem > 0:
+        packetSize = min(rem, MAX_PER_PACKET)
+        soc.send(byteList[:packetSize])
+        byteList = byteList[packetSize:]
+        rem -= packetSize
     soc.send(byteList) 
-    if conf and is_confirm:
-        ret = ""
-        while ret != CONFMSG:
-            ret = reciveProtocol(soc,str,False)
 
 def reciveProtocol(soc,convert_type=None,is_confirm=True):
-    if is_confirm and conf:
-        ret = ""
-        while ret != CONFMSG:
-            ret = reciveProtocol(soc,str,False)
-        sendProtocol(soc,CONFMSG,False)
-    size = 0
-    while 1:
-        addNum = int.from_bytes(soc.recv(1), "big")   
-        if addNum == 0:
-            break
-        size += addNum
-    if size > 4096:
-        b = b""
-        number = math.floor(size / 4096)
-        for i in range(number):
-            b += soc.recv(4096)
-        extra = size - (number * 4096)
-        b += soc.recv(extra)
-    else:
-        b = soc.recv(size)
-    if convert_type == int:
-        b = int.from_bytes(b, "big")   
-    if convert_type == str:
-        b = b.decode("utf-8")
-    if conf and is_confirm:
-        sendProtocol(soc,CONFMSG,False)
+    size = int.from_bytes(soc.recv(8), "big") 
+    rem = size
+    b = b""
+    while rem > 0:
+        packetSize = min(rem, MAX_PER_PACKET)
+        b += soc.recv(packetSize)
+        rem -= packetSize
     return b
-
-
-
-
-
-
-
-
-
-
-
 
 
