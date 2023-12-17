@@ -1,3 +1,6 @@
+import time
+time.sleep(45)
+
 import Network
 import Instructions
 import pickle
