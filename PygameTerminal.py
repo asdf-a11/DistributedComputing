@@ -64,7 +64,7 @@ def UpdateTerminal():
 
 
 updateThread = threading.Thread(target=UpdateTerminal, args=())
-updateThread.start()
+#updateThread.start()
 
 
 def Print(content, colour = TEXT_COLOUR, bgColour = BACKGROUND_COLOUR):
